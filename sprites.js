@@ -195,14 +195,36 @@ class Bird extends Sprite {
  * 水管
  */
 class Pipe extends Sprite {
-    constructor(img) {
+    /**
+     * 
+     * @param {*} img 
+     * @param {boolean} up 是否是朝上的水管（即上方的水管）
+     * @param {number} move 水管垂直移动的速度
+     */
+    constructor(img, up, move = 0) {
         super(img);
+
         /**是否已经被小鸟通过 */
         this.isleftbird = false;
+
+        this.up = up;
+        this.move = move;
     }
 
     run() {
         this.x -= Director.speed;
+
+        // 水管的垂直移动
+        this.y += this.move;
+        if (this.up) {
+            if ((this.move > 0 && this.y + 5 >= canvas.height - Res.base.height) ||
+                (this.move < 0 && this.y + this.height - 5 <= canvas.height - Res.base.height))
+                this.move *= -1;
+        } else {
+            if ((this.move > 0 && this.y >= 0) ||
+                (this.move < 0 && this.y + this.height - 5 <= 0))
+                this.move *= -1;
+        }
     }
 };
 

@@ -4,12 +4,23 @@
  */
 function get_pipes() {
 
-    // 随机颜色水管
-    let x = Math.random();
-    let up = null, down = null; // 上下两对水管
+    /**区间随机数函数 */
+    let get_random = (min, max) => { return Math.floor(Math.random() * (max + 1 - min) + min); };
 
-    if (x < 0.5) up = new Pipe(Res.pipe_green_up), down = new Pipe(Res.pipe_green_down);
-    else up = new Pipe(Res.pipe_red_up), down = new Pipe(Res.pipe_red_down);
+    // 随机颜色水管。绿色为普通水管，红色为垂直移动水管
+    let up = null, down = null; // 上下两对水管。up为朝上的水管（即下方的水管），down为朝下的水管（即上方的水管）
+    if (Math.random() < 0.5) {
+        up = new Pipe(Res.pipe_green_up, true);
+        down = new Pipe(Res.pipe_green_down, false);
+    }
+    else {
+        let a = 0, b = 0;
+        let minv = -5, maxv = 5;
+        while (a == 0) a = get_random(minv, maxv);
+        while (b == 0) b = get_random(minv, maxv);
+        up = new Pipe(Res.pipe_red_up, true, a);
+        down = new Pipe(Res.pipe_red_down, false, b);
+    }
 
     up.x = down.x = canvas.width;
 
@@ -19,9 +30,6 @@ function get_pipes() {
     let minbottom = Math.max(5, canvas.height - Res.base.height - up.height - dist);
     /**水管最高边界 */
     let maxbottom = Math.min(down.height, canvas.height - Res.base.height - 5 - dist);
-
-    /**区间随机数函数 */
-    let get_random = (min, max) => { return Math.floor(Math.random() * (max + 1 - min) + min); };
 
     let dist_y = get_random(minbottom, maxbottom);
     down.y = dist_y - down.height;
